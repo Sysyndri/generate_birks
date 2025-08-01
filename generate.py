@@ -2,18 +2,37 @@ from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_UNDERLINE
 from docx.shared import Inches, Pt
 
+template_translation_mount = {
+    "01": "января",
+    "02": "февраля",
+    "03": "марта",
+    "04": "апреля",
+    "05": "мая",
+    "06": "июня",
+    "07": "июля",
+    "08": "августа",
+    "09": "сентября",
+    "10": "октября",
+    "11": "ноября",
+    "12": "декабря",
+}
+
 
 def text_underline(new_paragraf: object, number: int, count_kv: int, data: str, flag_size: bool):
-    # Добавляем текст в список. Первое булевое значение показывает где нужно подчеркивание
-    # Второе булевое значение показывает где нужен другой размер  
+    # Переписываем дату по шаблону
+    data = data.split('.')
+    data = f"{data[0]} {template_translation_mount[data[1]]} {data[2]}"
+
+    # Добавляем текст в список. Первое булево значение показывает, где нужно подчеркивание
+    # Второе булево значение показывает где нужен другой размер
     text_parts = [
-    (f"№{number}", True, False),
-    ("  годно до ", False, False),
-    (f"{count_kv} кВ", True, False),
-    ("\nДата следующего испытания\n", False, False),
-    (f"{data}г.", True, False),
-    ("\nЭлектротехническая лаборатория\n",False, False),
-    ("АО «Коми коммунальные технологии»", False, True),
+        (f"№{number}", True, False),
+        ("  годно до ", False, False),
+        (f"{count_kv} кВ", True, False),
+        ("\nДата следующего испытания\n", False, False),
+        (f"{data}г.", True, False),
+        ("\nЭлектротехническая лаборатория\n", False, False),
+        ("АО «Коми коммунальные технологии»", False, True),
     ]
 
     # Добавляем текст в параграф с подчеркиванием там, где нужно
@@ -43,7 +62,7 @@ def text_underline(new_paragraf: object, number: int, count_kv: int, data: str, 
     return new_paragraf
 
 
-def generate_birks(count_birk: int, date: list[list], flag_size) -> object:
+def generate_birks(count_birk: int, date: list[list], flag_size):
     doc = Document()
 
     # Добавляем стили документу
@@ -88,9 +107,10 @@ def generate_birks(count_birk: int, date: list[list], flag_size) -> object:
             else:
                 cell.width = Inches(2)
             
-            # Добавляет параграф, и форматирует его с помошью отдельной функции
+            # Добавляет параграф, и форматирует его с помощью отдельной функции
             paragraph = cell.add_paragraph()
-            text_underline(new_paragraf=paragraph, number=number_prot, count_kv=count_kv, data=data_prot, flag_size=flag_size)
+            text_underline(new_paragraf=paragraph, number=number_prot, count_kv=count_kv, data=data_prot,
+                           flag_size=flag_size)
 
             # Выбирает параграф и добавляет ему выравнивание по центру
             p = cell.paragraphs[0]

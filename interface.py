@@ -3,9 +3,8 @@ import os
 from tkinter import *
 from tkinter import ttk
 from tkinter.messagebox import showerror, showinfo
-from generate import generate_birks, text_underline
+from generate import generate_birks
 
-   
 
 # Создание окна
 window = Tk()
@@ -35,11 +34,13 @@ var.set(1)
 radio_1 = Radiobutton(frame, text='Маленькая бирка', variable=var, value=1).grid(column=0, row=2)
 radio_2 = Radiobutton(frame, text='Большая бирка', variable=var, value=2).grid(column=1, row=2)
 
+
 # Функция для получения результата выбора пользователя
 def change():
     match var.get():
         case 1: return 1
         case 2: return 2
+
 
 count_birk_label = ttk.Label(frame, text="Введите количество бирок", font=("Arial", 10))
 count_birk_label.grid(column=2, row=1)
@@ -48,21 +49,26 @@ count_birk_enter.grid(column=2, row=2)
 
 
 def interfase_enter_date():
-    
     try:
         count_birk = int(count_birk_enter.get())
         count_line = 4
 
         for line in range(count_birk):
-            ttk.Label(frame, text="Введите номер", font=("Arial", 10)).grid(column=0, row=count_line, pady=25, sticky=N)
+            ttk.Label(frame, text="Введите номер", font=("Arial", 10)).grid(column=0, row=count_line, pady=25,
+                                                                            sticky=N)
+
             globals()[f'number_prot_{line}'] = ttk.Entry(frame)
             globals()[f'number_prot_{line}'].grid(column=0, row=count_line + 1, padx=8, sticky=N)
 
-            ttk.Label(frame, text="Введите до скольки кВ", font=("Arial", 10)).grid(column=1, row=count_line, pady=25, sticky=N)
+            ttk.Label(frame, text="Введите до скольки кВ", font=("Arial", 10)).grid(column=1, row=count_line, pady=25,
+                                                                                    sticky=N)
+
             globals()[f'count_kv_{line}'] = ttk.Entry(frame)
             globals()[f'count_kv_{line}'].grid(column=1, row=count_line + 1, padx=8, sticky=N)
 
-            ttk.Label(frame, text="Введите дату следующего испытания", font=("Arial", 10)).grid(column=2, row=count_line, pady=25, sticky=N)
+            ttk.Label(frame, text="Введите дату следующего испытания в формате - DD.MM.YYYY",
+                      font=("Arial", 10)).grid(column=2, row=count_line, pady=25, sticky=N)
+
             globals()[f'data_{line}'] = ttk.Entry(frame)
             globals()[f'data_{line}'].grid(column=2, row=count_line + 1, padx=8, sticky=N)
             
@@ -72,7 +78,7 @@ def interfase_enter_date():
         canvas.config(scrollregion=canvas.bbox("all"))
         Button(frame, text="Заполнить", command=registr_info).grid(column=3, row=count_line-2)
     except:
-        showerror("message", f"Вы ввели не правильное значение количества бирок! {count_birk}")
+        showerror("message", f"Вы ввели не правильное значение количества бирок!")
         return
         
 
@@ -97,7 +103,9 @@ def registr_info():
     doc.save("result.docx")
     showinfo("message", "Бирки успешно сгенерированы, файл сохранен")
     
-    os.startfile("result.docx", "print")
+    os.startfile("result.docx")
+
+
 Button(frame, text="Ввести данные", command=interfase_enter_date).grid(column=3, row=2)
 
 
